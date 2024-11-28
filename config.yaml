@@ -1,0 +1,73 @@
+# config.yaml
+
+data:
+  mhealth_path: 'C:/AI/data/MHEALTHDATASET'  # 실제 데이터 경로로 변경하세요
+  risk_path: 'C:/AI/dataset/RiskPrediction_Dataset.csv'  # 실제 데이터 경로로 변경하세요
+  window_size: 50
+  step_size: 25
+  batch_size: 64
+
+model:
+  transformer:
+    input_dim: 3
+    num_classes: 12  # 실제 클래스 수로 변경하세요
+    num_heads: 4
+    num_layers: 2
+    hidden_dim: 128
+    dropout: 0.1
+    learning_rate: 0.001
+    num_epochs: 30
+    patience: 5
+  cnn:
+    input_dim: 3
+    learning_rate: 0.001
+    num_epochs: 30
+    patience: 5
+  random_forest:
+    n_estimators: 100
+    max_depth: 30
+    min_samples_split: 2
+    min_samples_leaf: 1
+    random_state: 42
+  bagging:
+    base_estimator:
+      type: 'RandomForestClassifier'
+      n_estimators: 50
+      max_depth: 20
+      random_state: 42
+    n_estimators: 10
+    random_state: 42
+  boosting:
+    type: 'XGBClassifier'  # 또는 'LGBMClassifier'
+    learning_rate: 0.1
+    n_estimators: 100
+    max_depth: 6
+    random_state: 42
+  stacking:
+    base_models:
+      - type: 'RandomForestClassifier'
+        n_estimators: 100
+        max_depth: 30
+        min_samples_split: 2
+        min_samples_leaf: 1
+        random_state: 42
+      - type: 'LogisticRegression'
+        max_iter: 1000
+        class_weight: 'balanced'
+        random_state: 42
+    meta_model:
+      type: 'LogisticRegression'
+      max_iter: 1000
+      class_weight: 'balanced'
+      random_state: 42
+
+logging:
+  log_file: 'training.log'
+  level: 'INFO'
+
+mlflow:
+  tracking_uri: 'http://localhost:5000'  # MLflow 서버 URI
+  experiment_name: 'Activity_Recognition'
+
+dvc:
+  remote: 'myremote'  # DVC 원격 저장소 이름
